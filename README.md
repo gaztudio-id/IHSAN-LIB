@@ -23,19 +23,7 @@
 - **Manajemen Koleksi**: Input buku, kategori, dan stok.
 - **Laporan & Statistik**: Grafik kunjungan dan peminjaman real-time.
 
-## 🎨 High-Fidelity Wireframes
 
-Proyek ini menyertakan set wireframe HTML statis (High-Fidelity) yang mereplikasi tampilan dan interaksi pengguna. Wireframe ini berguna untuk presentasi atau referensi pengembangan frontend.
-
-📂 **Lokasi**: `public/wireframes/`
-
-| File | Deskripsi |
-| :--- | :--- |
-| `landing.html` | Halaman Depan & Staff Gate Modal |
-| `member_login.html` | Login Anggota (Support RFID Mode) |
-| `member_portal.html` | Dashboard Utama Anggota (SPA Feel) |
-| `admin_dashboard.html` | Dashboard Admin Utama |
-| `staff_dashboard.html` | Dashboard Staff Pustakawan |
 
 ## 🛠️ Teknologi yang Digunakan
 
