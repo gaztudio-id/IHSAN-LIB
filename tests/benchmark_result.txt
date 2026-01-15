@@ -1,0 +1,7 @@
+IHSAN-LIB BENCHMARK REPORT
+Date: 2026-01-15 04:13:09
+-------------------------------------------------------------
+Read Data Buku            | 100x       | 99.45 ms     | 1.8584 MB
+Input Absensi             | 50x        | 215.9 ms     | 0.0591 MB
+Kalkulasi Denda           | 50x        | 0.01 ms      | 0 MB
+Cek Stok Sirkulasi        | 200x       | 155.55 ms    | 0 MB

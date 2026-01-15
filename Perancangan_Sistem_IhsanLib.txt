@@ -1,0 +1,792 @@
+BAB III
+PERANCANGAN
+
+3.1 Desain Prototyping
+
+3.1.1 Iterasi Pertama
+
+3.1.1.1 Komunikasi
+Tahap awal pengembangan sistem "Ihsan-Lib" dimulai dengan komunikasi intensif antara pengembang dan pihak Perpustakaan Al-Ihsan Boarding School Riau. Observasi langsung dilakukan untuk memetakan alur kerja manual yang berjalan saat ini serta kendala yang dihadapi pustakawan dan santri.
+
+Dari proses komunikasi ini, diidentifikasi empat permasalahan kritis:
+1)  **Inefisiensi Antrian Sirkulasi**: Sistem peminjaman manual di buku besar menyebabkan antrian panjang saat jam istirahat yang singkat.
+2)  **Validitas Data & Stok**: Sering terjadi selisih antara data fisik buku dan catatan, serta kesulitan melacak siapa yang meminjam buku tertentu (Overdue tracking).
+3)  **Birokrasi Surat Bebas Pustaka (SBP)**: Proses pengajuan SBP untuk syarat kelulusan/pindah sekolah memakan waktu lama karena pengecekan manual satu per satu.
+4)  **Kurangnya Data Kunjungan**: Buku tamu fisik sering diabaikan, sehingga pihak manajemen tidak memiliki data akurat mengenai tingkat kunjungan harian.
+
+Solusi yang disepakati adalah membangun Sistem Perpustakaan Terintegrasi (Ihsan-Lib) berbasis Web yang mendukung **RFID (Radio Frequency Identification)** untuk sirkulasi cepat dan **Portal Mandiri** untuk santri.
+
+3.1.1.2 Perencanaan Secara Cepat
+
+3.1.1.2.1 Wireframe (Rancangan Antarmuka)
+Perancangan antarmuka (UI) difokuskan pada dua tampilan utama: **Portal Kiosk (Frontend)** untuk santri dan **Dashboard Admin (Backend)** untuk pengelola.
+
+1)  **Halaman Landing Page (Publik)**
+    *   **Header**: Logo sekolah, Navigasi (Layanan, Koleksi, OPAC Eksternal), dan Tombol Akses (Area Anggota & Login Staff).
+    *   **Hero Section**: Sambutan "Pusat Literasi & Informasi Digital" dengan tombol Call-to-Action menuju Portal.
+    *   **Search Bar**: Kotak pencarian buku (Judul/Pengarang) yang dapat diakses tanpa login.
+
+2)  **Halaman Portal Kiosk (Santri)**
+    *   Desain responsif untuk layar sentuh (Tablet/Monitor Touchscreen).
+    *   **Fitur Login**: Mendukung dua metode, yaitu Scan Kartu RFID (Tap) dan Input Manual NIS.
+    *   **Menu Utama**: Ikon besar untuk "Absen Kunjungan", "Cari Buku", "Pinjam Mandiri",  "Bebas Pustaka", dan "Profil".
+    *   **Modal Interaktif**: Pop-up konfirmasi dengan animasi sukses (Hijau) atau gagal (Merah).
+
+3)  **Dashboard Staff/Admin (Pengelola)**
+    *   **Sidebar Navigasi**: Menu terkelompok (Dashboard, Anggota, Buku, Sirkulasi, Laporan).
+    *   **Widget Statistik**: Grafik peminjaman bulanan, counter buku dipinjam, total denda, dan pengajuan SBP pending.
+    *   **Tabel Data**: Menampilkan daftar buku/anggota dengan fitur Pencarian, Filter, dan Pagination.
+
+3.1.1.2.2 Kebutuhan Fungsional
+Sistem ini membagi hak akses menjadi tiga aktor utama dengan rincian fitur sebagai berikut:
+
+1) **Aktor: Santri (Member)**
+   Tabel 3.1 Kebutuhan Fungsional Santri
+   | No | Fitur / Aktivitas Sistem | Penjelasan Detail |
+   |----|--------------------------|-------------------|
+   | 1. | Login & Autentikasi | Santri dapat masuk menggunakan Kartu RFID (Tap) atau NIS & Password default. |
+   | 2. | Absensi Kunjungan | Santri melakukan "Tap" kartu pada menu Absensi untuk mencatat log kunjungan harian. |
+   | 3. | Peminjaman Mandiri | Santri memproses peminjaman dengan scan kartu anggota diikuti scan barcode buku. |
+   | 4. | Cek Katalog (OPAC) | Mencari ketersediaan buku berdasarkan Judul, Penulis, atau Kategori. |
+   | 5. | Pengajuan SBP | Mengajukan Surat Bebas Pustaka secara mandiri. Sistem otomatis menolak jika masih ada pinjaman. |
+   | 6. | Cek Profil & Denda | Melihat riwayat peminjaman aktif, tanggal kembali, dan nominal denda (jika ada). |
+
+2) **Aktor: Staff (Pustakawan)**
+   Tabel 3.2 Kebutuhan Fungsional Staff
+   | No | Fitur / Aktivitas Sistem | Penjelasan Detail |
+   |----|--------------------------|-------------------|
+   | 1. | Dashboard Operasional | Memantau statistik harian (Sirkulasi, Pengunjung) secara real-time. |
+   | 2. | Manajemen Buku | Menambah data buku baru, mengedit stok, dan menghapus buku rusak/hilang. |
+   | 3. | Transaksi Peminjaman | Membantu santri melakukan peminjaman jika kiosk tidak dapat digunakan. |
+   | 4. | Transaksi Pengembalian | Memproses pengembalian buku, otomatis menghitung denda keterlambatan (Rp 500/hari). |
+   | 5. | Verifikasi SBP | Menyetujui atau menolak pengajuan SBP. Persetujuan akan men-generate Nomor Surat. |
+   | 6. | Cetak Laporan | Mengunduh laporan sirkulasi dan SBP dalam format PDF/Excel. |
+
+3) **Aktor: Super Admin**
+   Tabel 3.3 Kebutuhan Fungsional Admin
+   | No | Fitur / Aktivitas Sistem | Penjelasan Detail |
+   |----|--------------------------|-------------------|
+   | 1. | Manajemen Pengguna | Menambah akun Staff baru, mereset password staff, dan mengatur Role. |
+   | 2. | Konfigurasi Anggota | Import data santri massal (Excel), input kode RFID manual ke data santri. |
+   | 3. | Akses Penuh (Root) | Memiliki seluruh akses fitur Staff ditambah hak penghapusan data master. |
+
+3.1.1.2.3 Kebutuhan Non Fungsional
+   Tabel 3.4 Kebutuhan Non Fungsional
+   | No | Aspek | Spesifikasi Kebutuhan |
+   |----|-------|-----------------------|
+   | 1. | Performance | Waktu respons pembacaan RFID dan validasi data < 2 detik. |
+   | 2. | Usability | Antarmuka Kiosk menggunakan tombol besar (Touch-friendly) dan minim teks. |
+   | 3. | Security | Password di-hash (Bcrypt). Middleware membatasi akses URL Admin bagi user biasa. |
+   | 4. | Reliability | Sistem dapat berjalan 24/7 di Local Server (Laragon) dengan backup database berkala. |
+   | 5. | Compatibility | Kompatibel dengan browser modern (Chrome/Edge) dan perangkat Barcode Scanner standar. |
+
+3.1.1.3 Pemodelan Secara Cepat
+
+3.1.1.3.1 Use Case Diagram
+Menggambarkan interaksi aktor dengan sistem Ihsan-Lib. Relasi antar use case (Include/Extend) digambarkan dengan jelas.
+Posisi: **Santri (Kiri)**, **Sistem (Tengah)**, **Staff/Admin (Kanan)**.
+
+```plantuml
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Santri" as S
+actor "Staff Pustaka" as P
+actor "Super Admin" as A
+
+rectangle "Web Ihsan-Lib" {
+    ' Fungsionalitas Portal (Santri)
+    usecase "Login (RFID/NIS)" as UC_Login
+    usecase "Absensi Kunjungan" as UC_Absen
+    usecase "Cari Buku (OPAC)" as UC_Cari
+    usecase "Pinjam Mandiri" as UC_Pinjam
+    usecase "Lihat Profil" as UC_Profil
+    usecase "Ajukan SBP" as UC_AjukanSBP
+
+    ' Fungsionalitas Dashboard (Staff)
+    usecase "Login Staff" as UC_LoginStaff
+    usecase "Kelola Data Buku" as UC_Buku
+    usecase "Kelola Data Anggota" as UC_Anggota
+    usecase "Transaksi Kembali" as UC_Kembali
+    usecase "Validasi SBP" as UC_ValidasiSBP
+    usecase "Cetak Laporan" as UC_Laporan
+    
+    ' Fitur Spesifik
+    usecase "Bayar Denda" as UC_Denda
+    usecase "Cetak Surat SBP" as UC_CetakSBP
+    usecase "Kelola Akun Staff" as UC_UserMgmt
+
+    ' Relasi Santri (Left to Center)
+    S --> UC_Login
+    S --> UC_Cari
+    UC_Absen .> UC_Login : <<include>>
+    UC_Pinjam .> UC_Login : <<include>>
+    UC_Profil .> UC_Login : <<include>>
+    UC_AjukanSBP .> UC_Login : <<include>>
+
+    ' Relasi Staff (Center to Right - Arrow Reversed for Layout)
+    UC_LoginStaff --> P
+    UC_Buku --> P
+    UC_Anggota --> P
+    UC_Kembali --> P
+    UC_ValidasiSBP --> P
+    UC_Laporan --> P
+    
+    ' Relasi Spesifik (Internal)
+    UC_Denda .> UC_Kembali : <<extend>>
+    UC_CetakSBP .> UC_ValidasiSBP : <<extend>>
+    
+    ' Relasi Admin (Center to Right)
+    UC_UserMgmt --> A
+}
+' Inheritance (Right Side)
+A --|> P : <<inherits>>
+
+4. DESAIN DATABASE (DATABASE DESIGN)
+-------------------------------------------------------------------------------------
+
+4.1. ENTITY RELATIONSHIP DIAGRAM (UML)
+
+   Berikut adalah representasi visual struktur database menggunakan notasi PlantUML:
+
+```plantuml
+@startuml
+
+!theme plain
+hide circle
+skinparam linetype ortho
+
+entity "users" as users {
+  *id : bigint <<PK>>
+  --
+  name : varchar
+  email : varchar
+  password : varchar
+  rfid_code : varchar
+  created_at : timestamp
+  updated_at : timestamp
+}
+
+entity "members" as members {
+  *id : bigint <<PK>>
+  --
+  name : varchar
+  nis : varchar <<Unique>>
+  password : varchar
+  rfid_code : varchar <<Unique>>
+  class_name : varchar
+  role : enum ('santri','guru','staff')
+  is_active : boolean
+  ttl : date
+  created_at : timestamp
+  updated_at : timestamp
+}
+
+entity "books" as books {
+  *id : bigint <<PK>>
+  --
+  title : varchar
+  author : varchar
+  publisher : varchar
+  year : year
+  category : varchar
+  barcode : varchar <<Unique>>
+  stock : integer
+  shelf_location : varchar
+  created_at : timestamp
+  updated_at : timestamp
+}
+
+entity "loans" as loans {
+  *id : bigint <<PK>>
+  --
+  *member_id : bigint <<FK>>
+  *book_id : bigint <<FK>>
+  borrow_date : datetime
+  due_date : datetime
+  return_date : datetime
+  status : enum ('active','returned','overdue')
+  notes : text
+}
+
+entity "attendances" as attendances {
+  *id : bigint <<PK>>
+  --
+  *member_id : bigint <<FK>>
+  date : date
+  time : time
+  scanned_at : datetime
+}
+
+entity "sbp_requests" as sbp {
+  *id : bigint <<PK>>
+  --
+  *member_id : bigint <<FK>>
+  request_date : date
+  status : enum ('pending','approved','rejected')
+  letter_number : varchar
+  admin_note : varchar
+}
+
+' Relationships
+members ||..o{ loans : "1 to Many"
+books ||..o{ loans : "1 to Many"
+members ||..o{ attendances : "1 to Many"
+members ||..o{ sbp : "1 to Many"
+
+@enduml
+```
+
+4.2. KAMUS DATA (DATA DICTIONARY)
+
+   Berikut adalah deskripsi rinci (Tabel Perdata) untuk setiap entitas dalam sistem:
+
+   A. Tabel Master (Data Referensi)
+
+   1. Tabel: `users`
+      Deskripsi: Menyimpan data akun untuk Petugas Perpustakaan (Admin/Staff).
+      -----------------------------------------------------------------------------------
+      | Kolom       | Tipe Data    | Atribut    | Deskripsi                             |
+      |-------------|--------------|------------|---------------------------------------|
+      | id          | BIGINT       | PK, AI     | Identifikasi unik petugas (Primary Key)|
+      | name        | VARCHAR(255) | Not Null   | Nama lengkap petugas                  |
+      | email       | VARCHAR(255) | Unique     | Alamat email untuk login sistem       |
+      | password    | VARCHAR(255) | Not Null   | Password terenkripsi (Bcrypt)         |
+      | rfid_code   | VARCHAR(255) | Nullable   | UID Kartu RFID untuk login cepat      |
+      | timestamps  | TIMESTAMP    | -          | Waktu pembuatan dan update data       |
+
+   2. Tabel: `members`
+      Deskripsi: Menyimpan data Anggota Perpustakaan (Santri/Guru) yang dapat meminjam buku.
+      -----------------------------------------------------------------------------------
+      | Kolom       | Tipe Data    | Atribut    | Deskripsi                             |
+      |-------------|--------------|------------|---------------------------------------|
+      | id          | BIGINT       | PK, AI     | Identifikasi unik anggota             |
+      | name        | VARCHAR(255) | Not Null   | Nama lengkap anggota                  |
+      | nis         | VARCHAR(255) | Unique     | Nomor Induk Santri (Username Login)   |
+      | password    | VARCHAR(255) | Default    | Password login (Default: 123456)      |
+      | rfid_code   | VARCHAR(255) | Unique     | UID Kartu Anggota (untuk Scan)        |
+      | class_name  | VARCHAR(255) | Nullable   | Informasi kelas/angkatan (jika ada)   |
+      | role        | ENUM         | Default 'santri' | Peran anggota dalam sistem      |
+      | is_active   | BOOLEAN      | Default True | Status keaktifan akun               |
+      | ttl         | DATE         | Nullable   | Tanggal Lahir                         |
+
+   3. Tabel: `books`
+      Deskripsi: Katalog buku yang tersedia di perpustakaan.
+      -----------------------------------------------------------------------------------
+      | Kolom       | Tipe Data    | Atribut    | Deskripsi                             |
+      |-------------|--------------|------------|---------------------------------------|
+      | id          | BIGINT       | PK, AI     | Identifikasi unik buku                |
+      | title       | VARCHAR(255) | Not Null   | Judul buku                            |
+      | author      | VARCHAR(255) | Not Null   | Nama penulis buku                     |
+      | publisher   | VARCHAR(255) | Nullable   | Nama penerbit                         |
+      | year        | YEAR         | Nullable   | Tahun terbit buku                     |
+      | barcode     | VARCHAR(255) | Unique     | Kode Barcode/RFID fisik pada buku     |
+      | stock       | INTEGER      | Default 0  | Jumlah stok fisik yang tersedia       |
+      | shelf_loc...| VARCHAR(255) | Nullable   | Lokasi rak penyimpanan buku           |
+
+   B. Tabel Transaksi (Sirkulasi & Kegiatan)
+
+   4. Tabel: `loans`
+      Deskripsi: Mencatat riwayat peminjaman dan pengembalian buku.
+      -----------------------------------------------------------------------------------
+      | Kolom       | Tipe Data    | Atribut    | Deskripsi                             |
+      |-------------|--------------|------------|---------------------------------------|
+      | id          | BIGINT       | PK, AI     | ID Transaksi Peminjaman               |
+      | member_id   | BIGINT       | FK         | Merujuk ke tabel `members.id`         |
+      | book_id     | BIGINT       | FK         | Merujuk ke tabel `books.id`           |
+      | borrow_date | DATETIME     | Not Null   | Waktu buku dipinjam                   |
+      | due_date    | DATETIME     | Not Null   | Batas waktu pengembalian              |
+      | return_date | DATETIME     | Nullable   | Waktu aktual buku dikembalikan        |
+      | status      | ENUM         | -          | Status: active, returned, overdue     |
+      | notes       | TEXT         | Nullable   | Catatan denda atau kondisi buku       |
+
+   5. Tabel: `attendances`
+      Deskripsi: Log pengunjung harian perpustakaan (Buku Tamu Digital).
+      -----------------------------------------------------------------------------------
+      | Kolom       | Tipe Data    | Atribut    | Deskripsi                             |
+      |-------------|--------------|------------|---------------------------------------|
+      | id          | BIGINT       | PK, AI     | ID Log Absensi                        |
+      | member_id   | BIGINT       | FK         | Merujuk ke tabel `members.id`         |
+      | scanned_at  | DATETIME     | Not Null   | Timestamp lengkap waktu scan          |
+      | date        | DATE         | Not Null   | Tanggal (untuk filter harian)         |
+      | time        | TIME         | Not Null   | Jam (untuk filter waktu)              |
+
+   6. Tabel: `sbp_requests`
+      Deskripsi: Pengajuan Surat Bebas Pustaka (Syarat kelulusan/pindah sekolah).
+      -----------------------------------------------------------------------------------
+      | Kolom       | Tipe Data    | Atribut    | Deskripsi                             |
+      |-------------|--------------|------------|---------------------------------------|
+      | id          | BIGINT       | PK, AI     | ID Pengajuan                          |
+      | member_id   | BIGINT       | FK         | Merujuk ke tabel `members.id`         |
+      | request_date| DATE         | Not Null   | Tanggal pengajuan dibuat              |
+      | status      | ENUM         | Default 'pending' | Status proses admin            |
+      | letter_num..| VARCHAR(255) | Nullable   | Nomor surat resmi (jika disetujui)    |
+      | admin_note  | VARCHAR(255) | Nullable   | Catatan penolakan/persetujuan         |
+
+   Keterangan:
+   - PK : Primary Key (Kunci Utama)
+   - FK : Foreign Key (Kunci Tamu / Relasi)
+   - AI : Auto Increment (Penomoran Otomatis)
+
+3.1.1.3.2 Use Case Scenario (Skenario Penggunaan)
+
+1) **Use Case Scenario: Login (Santri/Staff)**
+   Tabel 3.5 Use Case Scenario Login
+   | Aksi Aktor | Reaksi Sistem |
+   |------------|---------------|
+   | **Skenario Normal** | |
+   | 1. Membuka Halaman Web Utama. | 2. Menampilkan Landing Page dengan opsi Menu Login. |
+   | 3. Santri melakukan Scan (Tap) Kartu RFID. | 4. Validasi kode RFID di database. Jika valid, redirect ke Dashboard Member. |
+   | **Skenario Alternatif** | |
+   | 3. Staff memasukkan Email & Password. | 4. Validasi kredensial. Jika benar, redirect ke Dashboard Admin. |
+
+2) **Use Case Scenario: Absensi Kunjungan**
+   Tabel 3.6 Use Case Scenario Absensi
+   | Aksi Aktor (Santri) | Reaksi Sistem |
+   |---------------------|---------------|
+   | **Skenario Normal** | |
+   | 1. Klik menu "Absen Kunjungan". | 2. Menampilkan Modal Scan RFID ("Tap Kartu"). |
+   | 3. Tempelkan kartu pada alat scan. | 4. Validasi kartu. Simpan data kunjungan (Waktu & Nama). Tampilkan notifikasi "Absensi Berhasil". |
+   | **Skenario Alternatif** | |
+   | 3. Kartu salah/rusak. | 4. Tampilkan pesan kesalahan "Kartu Gagal". |
+
+3) **Use Case Scenario: Peminjaman Mandiri**
+   Tabel 3.7 Use Case Scenario Peminjaman
+   | Aksi Aktor (Santri) | Reaksi Sistem |
+   |---------------------|---------------|
+   | **Skenario Normal** | |
+   | 1. Masuk menu "Pinjam Buku" di Kiosk. | 2. Minta Scan Kartu Anggota (Validasi ulang). |
+   | 3. Scan Barcode Buku. | 4. Cek Stok Buku. Jika tersedia, kurangi stok dan catat Peminjaman. Tampilkan Sukses. |
+   | **Skenario Alternatif** | |
+   | 4. Stok Buku = 0. | 5. Tolak transaksi, tampilkan "Stok Habis". |
+
+4) **Use Case Scenario: Pengembalian Buku & Denda**
+   Tabel 3.8 Use Case Scenario Pengembalian
+   | Aksi Aktor (Staff) | Reaksi Sistem |
+   |--------------------|---------------|
+   | **Skenario Normal** | |
+   | 1. Buka menu Sirkulasi > Pengembalian. | 2. Scan Kartu Anggota. |
+   | 3. Sistem load daftar pinjaman aktif. | 4. Pilih buku yang dikembalikan. |
+   | 5. Konfirmasi Pengembalian. | 6. Cek keterlambatan. Jika telat, hitung denda. Ubah status 'Returned'. Stok +1. |
+
+5) **Use Case Scenario: Pengajuan SBP**
+   Tabel 3.9 Use Case Scenario Pengajuan SBP
+   | Aksi Aktor (Santri) | Reaksi Sistem |
+   |---------------------|---------------|
+   | **Skenario Normal** | |
+   | 1. Login Portal > Menu "Bebas Pustaka". | 2. Cek jumlah pinjaman aktif user. |
+   | 3. Jika pinjaman = 0, Klik "Ajukan". | 4. Simpan request SBP dengan status 'pending'. |
+   | **Skenario Alternatif** | |
+   | 2. User masih punya pinjaman. | 3. Tampilkan Alert "Harap kembalikan buku" dan disable tombol. |
+
+6) **Use Case Scenario: Validasi Admin SBP**
+   Tabel 3.10 Use Case Scenario Validasi SBP
+   | Aksi Aktor (Admin) | Reaksi Sistem |
+   |--------------------|---------------|
+   | **Skenario Normal** | |
+   | 1. Buka menu "Verifikasi SBP". | 2. Tampilkan tabel request pending. |
+   | 3. Klik tombol "Setuju" (Approve). | 4. Update status 'approved'. Generate No Surat otomatis. |
+   | 5. Klik tombol "Cetak". | 6. Download PDF Surat Bebas Pustaka. |
+
+7) **Use Case Scenario: Manajemen Buku**
+   Tabel 3.11 Use Case Scenario Manajemen Buku
+   | Aksi Aktor (Staff) | Reaksi Sistem |
+   |--------------------|---------------|
+   | **Skenario Normal** | |
+   | 1. Buka menu "Data Buku". | 2. Tampilkan tabel daftar buku. |
+   | 3. Klik "Tambah Buku Baru". | 4. Tampilkan Form Input (Judul, Penulis, Stok). |
+   | 5. Isi form dan Simpan. | 6. Validasi input. Simpan ke database `books`. |
+
+8) **Use Case Scenario: Manajemen Anggota**
+   Tabel 3.12 Use Case Scenario Manajemen Anggota
+   | Aksi Aktor (Admin) | Reaksi Sistem |
+   |--------------------|---------------|
+   | **Skenario Normal** | |
+   | 1. Buka menu "Data Anggota". | 2. Tampilkan tabel daftar santri. |
+   | 3. Klik Edit pada salah satu santri. | 4. Ubah data (misal: Kode RFID). |
+   | 5. Simpan Perubahan. | 6. Update record database `members`. |
+
+3.1.1.3.3 Activity Diagram
+
+DI bawah ini adalah rangkaian Activity Diagram untuk setiap proses bisnis utama dalam sistem Ihsan-Lib.
+
+1) **Activity Diagram: Login User (Santri & Staff)**
+```plantuml
+@startuml
+start
+:User Akses Halaman Web;
+if (Pilih Login Staff?) then (Ya)
+    :Input Email & Password;
+    if (Valid?) then (Ya)
+        :Redirect Dashboard Staff;
+    else (Tidak)
+        :Tampilkan Pesan Error;
+    endif
+else (Tidak - Santri)
+    :Tampil Layar Kiosk;
+    if (Metode?) then (RFID)
+        :Tap Kartu di Reader;
+    else (Manual)
+        :Input NIS & Password;
+    endif
+    
+    if (Data Valid?) then (Ya)
+        :Redirect Dashboard Member;
+    else (Tidak)
+        :Alert "Data Tidak Ditemukan";
+    endif
+endif
+stop
+@enduml
+```
+
+2) **Activity Diagram: Absensi Kunjungan (Kiosk)**
+```plantuml
+@startuml
+start
+:Santri Klik Menu 'Absen' di Kiosk;
+:Sistem Aktifkan Scanner RFID;
+:Sistem Menampilkan Modal "Tap Kartu";
+:Santri Menempelkan Kartu;
+if (Kartu Terdaftar?) then (Ya)
+    :Sistem Catat Waktu & Lokasi;
+    :Tampilkan Notifikasi "Absensi Berhasil";
+    :Auto-Close Modal (2 detik);
+else (Tidak)
+    :Tampilkan Error "Kartu Gagal";
+endif
+stop
+@enduml
+```
+
+3) **Activity Diagram: Peminjaman Buku Mandiri**
+```plantuml
+@startuml
+start
+:Santri Login ke Portal Kiosk;
+:Pilih Menu "Pinjam Buku";
+:Scan Kartu Anggota (Validasi Sesi);
+:Scan Barcode Buku;
+:Sistem Cek Data Buku;
+
+if (Buku Ada di DB?) then (Ya)
+    if (Stok > 0?) then (Ya)
+        :Kurangi Stok Buku (-1);
+        :Buat Data Peminjaman (Status: Active);
+        :Tampilkan "Peminjaman Berhasil";
+    else (Tidak)
+        :Tampilkan Error "Stok Habis";
+    endif
+else (Tidak)
+    :Tampilkan Error "Buku Tidak Dikenali";
+endif
+stop
+@enduml
+```
+
+4) **Activity Diagram: Pengembalian & Denda**
+```plantuml
+@startuml
+start
+:Menu Sirkulasi -> Pengembalian;
+:Scan Kartu Anggota;
+:Sistem Tampilkan Daftar Pinjaman Aktif;
+
+if (Pilih Buku Kembali?) then (Ya)
+    :Sistem Cek Tanggal Jatuh Tempo;
+    if (Tanggal Kembali > Jatuh Tempo?) then (Ya - Terlambat)
+        :Hitung Selisih Hari;
+        :Hitung Denda (Hari x 500);
+        :Tampilkan Nominal Denda;
+        :Santri Bayar Denda;
+        :Staff Konfirmasi Pembayaran;
+    else (Tidak)
+        :Tidak Ada Denda;
+    endif
+    
+    :Update Status Loan -> 'Returned';
+    :Update Stok Buku (+1);
+    :Cetak Struk (Opsional);
+else (Batal)
+    :Selesai;
+endif
+stop
+@enduml
+```
+
+5) **Activity Diagram: Pengajuan Surat Bebas Pustaka (SBP)**
+```plantuml
+@startuml
+start
+:Santri Login Portal;
+:Pilih Menu "Bebas Pustaka";
+:Sistem Cek Pinjaman Aktif;
+
+if (Jumlah Pinjaman == 0?) then (Ya)
+    :Tampilkan Form Pengajuan;
+    :Santri Klik "Ajukan Sekarang";
+    :Simpan Request (Status: Pending);
+    :Tampilkan "Pengajuan Terkirim";
+else (Tidak)
+    :Tampilkan Alert "Kembalikan Buku Dulu!";
+    :Disable Tombol Ajukan;
+endif
+stop
+@enduml
+```
+
+6) **Activity Diagram: Validasi & Cetak SBP (Admin)**
+```plantuml
+@startuml
+start
+:Admin Buka Menu "Verifikasi SBP";
+:Sistem Tampilkan Daftar Pending;
+:Admin Cek Data Santri;
+
+if (Setujui?) then (Ya)
+    :Klik Tombol Approve;
+    :Sistem Generate No Surat Otomatis;
+    :Update Status -> Approved;
+    :Kirim Notifikasi ke Santri;
+    
+    if (Perlu Cetak?) then (Ya)
+        :Klik Tombol Print;
+        :Sistem Generate PDF (Kop Surat Resmi);
+        :Download File;
+    endif
+else (Tolak)
+    :Klik Tombol Reject;
+    :Update Status -> Rejected;
+endif
+stop
+@enduml
+```
+
+3.1.1.3.4 Class Diagram
+Diagram kelas ini merepresentasikan struktur tabel database dan Model Eloquent dalam Laravel, beserta atribut kuncinya.
+
+```plantuml
+@startuml
+class User {
+    +id : bigint
+    +name : string
+    +email : string
+    +password : string
+    +role : enum('admin', 'staff')
+    +generateToken()
+}
+
+class Member {
+    +id : bigint
+    +nis : string
+    +rfid_code : string
+    +name : string
+    +class_name : string
+    +phone : string
+    +activeLoans() : HasMany
+}
+
+class Book {
+    +id : bigint
+    +book_code : string
+    +title : string
+    +author : string
+    +publisher : string
+    +year : int
+    +stock : int
+    +loans() : HasMany
+}
+
+class Loan {
+    +id : bigint
+    +member_id : bigint
+    +book_id : bigint
+    +borrow_date : date
+    +due_date : date
+    +return_date : date
+    +status : enum('active','returned')
+    +fine_amount : decimal
+    +isOverdue() : bool
+}
+
+class SbpRequest {
+    +id : bigint
+    +member_id : bigint
+    +status : enum('pending','approved')
+    +letter_number : string
+    +processed_at : timestamp
+    +generateNumber() : string
+}
+
+User "1" ..> "*" Loan : manages
+Member "1" -- "*" Loan : borrows
+Member "1" -- "*" SbpRequest : requests
+Book "1" -- "*" Loan : included_in
+@enduml
+```
+
+3.1.1.4 Pembentukan Prototype (Implementasi)
+Pada tahap ini, desain diimplementasikan menggunakan Laravel (PHP). Tabel berikut merincikan implementasi antarmuka berdasarkan wireframe yang direncanakan.
+
+Tabel 3.13 Implementasi Wireframe & Prototype
+| No | Nama Fitur | Keterangan Implementasi Prototype |
+|----|------------|-----------------------------------|
+| 1. | **Halaman Login** | Tampilan bersih dengan dua kolom: Scan RFID di kiri, Form Login Staff di kanan. Responsif untuk tablet/kiosk. |
+| 2. | **Dashboard Admin** | Sidebar gelap di kiri, konten statistik di kanan (Chart.js), widget notifikasi SBP pending berwarna merah jika ada request baru. |
+| 3. | **Portal Member** | Menu Grid (kotak-kotak) dengan ikon SVG besar. Background putih bersih dengan aksen hijau (Al-Ihsan). |
+| 4. | **Sirkulasi (Loan)** | Halaman input menggunakan AJAX. Scan barcode buku langsung memunculkan data buku tanpa reload halaman. |
+| 5. | **Cetak SBP** | Halaman PDF auto-print, ukuran A4 marginless, dengan kop surat bitmap resolusi tinggi dan format 2 kolom untuk tanda tangan. |
+
+3.1.1.5 Penyerahan Sistem dan Umpan Balik
+Setelah prototype iterasi pertama diserahkan kepada Pustakawan dan Tim IT, dilakukan sesi demo.
+**Umpan Balik Iterasi 1:**
+1.  **Navigasi Mobile**: Menu "E-Book" di portal santri membingungkan karena konten belum siap. Disarankan dihapus sementara.
+2.  **Layout Surat**: Surat SBP terlalu polos, butuh kop surat dan salam Islami "Assalamu'alaikum".
+3.  **Link OPAC**: Santri butuh akses cepat ke koleksi digital.
+
+3.1.2 Iterasi Kedua
+
+3.1.2.1 Komunikasi
+Dilakukan pertemuan lanjutan untuk membahas detail perbaikan berdasarkan feedback iterasi pertama. Pustakawan memberikan contoh format surat SBP fisik yang diinginkan. Tim IT meminta akses Link Eksternal OPAC diletakkan di menu utama.
+
+3.1.2.2 Perencanaan (Refinement)
+*   **Navigasi**: Menghapus item menu E-Book, Menambah item menu OPAC Eksternal.
+*   **Surat SBP**: Mengubah view Blade menjadi layout A4 formal, menambah field `letter_number` otomatis di database.
+
+3.1.2.3 Pemodelan (Update Diagram)
+*   **Update Class Diagram**: Menambahkan atribut `letter_number` pada Class `SbpRequest`.
+*   **Update Activity Diagram**: Menambahkan logika "Generate Nomor Surat" pada Activity Validasi Admin.
+
+3.1.2.4 Pembentukan Prototype (Revisi)
+Dilakukan perbaikan kode pada modul View dan Controller.
+
+Tabel 3.14 Perbaikan Wireframe Iterasi 2
+| No | Fitur | Sebelum Perbaikan | Sesudah Perbaikan |
+|----|-------|-------------------|-------------------|
+| 1. | **Menu Portal** | Terdapat menu E-Book yang tidak aktif. | Menu E-Book dihapus, diganti Menu OPAC Eksternal (Link Aktif). |
+| 2. | **Cetak SBP** | Teks polos, format surat kurang resmi. | Menggunakan Kop Surat Sekolah, Salam Islami, dan Font Times New Roman. |
+| 3. | **Sidebar Admin** | Tidak ada link keluar. | Ditambahkan link shortcut ke OPAC Eksternal di sidebar bawah. |
+
+3.1.2.5 Penyerahan Final dan Umpan Balik
+Sistem versi revisi diserahkan kembali. Pihak sekolah menerima sistem dengan status **VALID**. Tidak ada revisi mayor lebih lanjut.
+
+3.2 Perancangan Pengujian Sistem
+
+Pada tahap ini, dirancang skenario pengujian untuk memastikan sistem memenuhi kebutuhan fungsional dan non-fungsional sebelum digunakan secara massal. Metode pengujian meliputi Black Box Testing, Usability Testing (SUS), dan Performance Testing.
+
+3.2.1 Perancangan Black Box Testing
+Pengujian ini dirancang untuk memvalidasi input dan output pada fitur-fitur utama sistem.
+
+Tabel 3.15 Rencana Pengujian: Autentikasi & Portal
+| No | Skenario Uji | Data Masukan | Hasil yang Diharapkan |
+|----|--------------|--------------|-----------------------|
+| 1. | Login Web (Portal) | Tap Kartu RFID yang sudah terdaftar | Sistem mengarahkan user ke Dashboard Member dan menampilkan sapaan nama santri sesuai data RFID. |
+| 2. | Login Gagal (Kartu Ilegal) | Tap Kartu RFID yang tidak terdaftar | Sistem tetap di halaman login dan menampilkan pesan "Data anggota tidak ditemukan". |
+| 3. | Absensi Harian | Klik menu "Absen", lalu Scan RFID | Sistem menampilkan modal sukses berwarna hijau dan mencatat waktu kedatangan di database. |
+
+Tabel 3.16 Rencana Pengujian: Sirkulasi & SBP
+| No | Skenario Uji | Kondisi Awal | Hasil yang Diharapkan |
+|----|--------------|--------------|-----------------------|
+| 1. | Ajukan SBP dengan Tanggungan | Member memiliki status pinjaman 'active' | Tombol pengajuan SBP non-aktif atau muncul pesan "Kembalikan buku terlebih dahulu". |
+| 2. | Ajukan SBP Valid | Member tidak memiliki pinjaman | Data pengajuan tersimpan dengan status 'pending'. Admin menerima notifikasi. |
+| 3. | Proses Approval SBP | Admin memiliki hak akses validasi | Status pengajuan berubah menjadi 'approved', dan Nomor Surat otomatis terbentuk sesuai format bulan/tahun berjalan. |
+| 4. | Cetak Laporan PDF | Admin menekan tombol cetak | Sistem melakukan generate file PDF satu halaman dengan layout Kop Surat resmi. |
+| 5. | Akses OPAC Eksternal | Klik link "OPAC Eksternal" di menu | Sistem membuka tab baru browser menuju alamat `opac.ibs.sch.id`. |
+
+3.2.2 Perancangan Usability Testing (SUS)
+Pengujian kegunaan akan dilakukan menggunakan metode **System Usability Scale (SUS)**. Mengacu pada 5 komponen kualitas Nielsen, pertanyaan dikategorikan sebagai berikut:
+
+Tabel 3.17 Daftar Pertanyaan Kuesioner SUS (5 Dimensi)
+| No | Kategori & Pertanyaan (Skala 1 - 5) | Target Responden |
+|----|-------------------------------------|------------------|
+| **A** | **Learnability (Kemudahan Dipelajari)** | |
+| 1. | Saya membayangkan orang lain akan cepat belajar menggunakan sistem ini. | Semua Aktor |
+| 2. | Saya tidak perlu banyak belajar teknis untuk menggunakan sistem ini. | Santri |
+| **B** | **Efficiency (Efisiensi Penggunaan)** | |
+| 3. | Saya merasa sistem sirkulasi dengan RFID mempercepat pekerjaan saya. | Staff |
+| 4. | Saya merasa fitur-fitur sistem ini berjalan efisien dan semestinya. | Staff |
+| **C** | **Memorability (Kemudahan Diingat)** | |
+| 5. | Saya merasa sistem ini tidak rumit sehingga mudah diingat alurnya. | Santri |
+| 6. | Saya merasa berbagai fungsi dalam sistem ini terintegrasi dengan logis. | Admin |
+| **D** | **Errors (Pencegahan & Penanganan Error)** | |
+| 7. | Saya merasa antarmuka sistem ini konsisten (tidak membingungkan). | Semua Aktor |
+| 8. | Saya merasa percaya diri (minim kesalahan) saat menggunakan sistem ini. | Staff |
+| **E** | **Satisfaction (Kepuasan Pengguna)** | |
+| 9. | Saya pikir saya akan sering menggunakan sistem ini secara sukarela. | Staff & Santri |
+| 10. | Secara umum, saya puas dengan kemudahan yang ditawarkan sistem ini. | Semua Aktor |
+
+**Target Skor Rata-rata:** > 70 (Good/Acceptable).
+
+3.2.3 Perancangan Performance Testing
+Pengujian kinerja akan dilakukan menggunakan pendekatan **Internal Code Benchmark** (Script Coding). Metode ini lebih akurat untuk mengukur efisiensi kode back-end tanpa dipengaruhi faktor jaringan eksternal.
+
+Rencana skenario benchmark internal:
+1.  **Stress Test Database**:
+    *   **Metode**: Script looping insert/read 100 data user secara batch.
+    *   **Target**: Rata-rata waktu eksekusi < 50ms per batch.
+2.  **Logic Execution Test**:
+    *   **Metode**: Menjalankan fungsi kalkulasi denda dan cek stok untuk 500 transaksi.
+    *   **Target**: Total eksekusi memori < 10MB dan waktu < 200ms.
+
+---
+Dokumen ini disusun sebagai acuan teknis pengembangan Sistem Informasi Perpustakaan "Ihsan-Lib".
+
+3.2.4 Lembar Kerja Pengujian (Contoh)
+Berikut adalah format tabel kerja yang telah dilengkapi dengan daftar skenario pengujian komprehensif untuk seluruh modul sistem.
+
+1) **Format Lembar Checklist Black Box Testing**
+   **Nama Penguji:** ____________________  **Tanggal:** ____________________
+   **Versi Sistem:** v1.0 (Release)
+
+   Tabel 3.18 Lembar Kerja Pengujian Fungsional (Black Box)
+   | No | Modul | Skenario Uji | Hasil yang Diharapkan | Hasil Aktual | Status |
+   |----|-------|--------------|-----------------------|--------------|--------|
+   | **A** | **Autentikasi & Kiosk** | | | | |
+   | 1. | Login Member | Tap Kartu Valid | Redirect ke Dashboard & Sapaan Nama | _______ | [ ] OK |
+   | 2. | Login Member | Tap Kartu Tidak Terdaftar | Alert Merah "Data Tidak Ditemukan" | _______ | [ ] OK |
+   | 3. | Login Staff | Input Email & Pass Benar | Redirect ke Dashboard Staff | _______ | [ ] OK |
+   | 4. | Absensi | Tap Kartu di Menu Absen | Modal Sukses & Data Terekam | _______ | [ ] OK |
+   | **B** | **Sirkulasi (Pinjam/Kembali)** | | | | |
+   | 5. | Peminjaman | Scan Buku (Stok > 0) | Sukses, Stok -1, Status 'Active' | _______ | [ ] OK |
+   | 6. | Peminjaman | Scan Buku (Stok 0) | Gagal, Alert "Stok Habis" | _______ | [ ] OK |
+   | 7. | Pengembalian | Scan Kartu Anggota | Tampil Daftar Pinjaman Aktif | _______ | [ ] OK |
+   | 8. | Pengembalian | Kembali Tepat Waktu | Status 'Returned', Tidak ada Denda | _______ | [ ] OK |
+   | 9. | Pengembalian | Kembali Terlambat | Muncul Hitungan Denda Otomatis | _______ | [ ] OK |
+   | **C** | **Administrasi & SBP** | | | | |
+   | 10.| Form SBP | Ajukan saat ada pinjaman | Tombol Disable / Alert Peringatan | _______ | [ ] OK |
+   | 11.| Form SBP | Ajukan (Syarat Lengkap) | Tersimpan status 'Pending' | _______ | [ ] OK |
+   | 12.| Approval SBP | Admin Klik 'Approve' | Status 'Approved', No. Surat Terisi | _______ | [ ] OK |
+   | 13.| Cetak SBP | Klik Print PDF | File PDF Terunduh (Format Resmi) | _______ | [ ] OK |
+   | **D** | **Manajemen Data** | | | | |
+   | 14.| Buku Baru | Input Data & Simpan | Data muncul di tabel buku | _______ | [ ] OK |
+   | 15.| Edit Anggota | Update Kode RFID | Login RFID baru berhasil | _______ | [ ] OK |
+
+2) **Format Lembar Penilaian SUS (Per Responden)**
+   **Nama Responden:** ____________________ **Role:** (Santri/Staff/Admin)
+
+   Tabel 3.19 Lembar Skor SUS
+   | No | Pertanyaan (5 Dimensi Nielsen) | Skor (1-5) |
+   |----|--------------------------------|------------|
+   | 1. | **Learnability**: Orang lain cepat paham? | _____ |
+   | 2. | **Learnability**: Tidak perlu skill teknis? | _____ |
+   | 3. | **Efficiency**: Mempercepat pekerjaan? | _____ |
+   | 4. | **Efficiency**: Fitur berjalan efisien? | _____ |
+   | 5. | **Memorability**: Alur mudah diingat? | _____ |
+   | 6. | **Memorability**: Integrasi logis? | _____ |
+   | 7. | **Errors**: Antarmuka konsisten? | _____ |
+   | 8. | **Errors**: Minim kesalahan penggunaan? | _____ |
+   | 9. | **Satisfaction**: Ingin pakai lagi? | _____ |
+   | 10.| **Satisfaction**: Puas secara keseluruhan? | _____ |
+   |    | **TOTAL SKOR (Total x 2.5) =** | **_____** |
+
+3) **Format Lembar Kode Benchmark**
+   **Metode:** Running Script (e.g., `php artisan benchmark:run`)
+
+   Tabel 3.20 Lembar Kerja Uji Performa (Internal)
+   | No | Modul Uji | Iterasi | Rata-Rata Waktu (ms) | Memory Usage | Status |
+   |----|-----------|---------|----------------------|--------------|--------|
+   | 1. | Read Data Buku | 100x | _________ ms | ______ MB | [ ] Stabil |
+   | 2. | Input Absensi | 50x | _________ ms | ______ MB | [ ] Stabil |
+   | 3. | Kalkulasi Denda| 50x | _________ ms | ______ MB | [ ] Stabil |
+   | 4. | Cek Stok Sirkulasi | 200x| _________ ms | ______ MB | [ ] Stabil |

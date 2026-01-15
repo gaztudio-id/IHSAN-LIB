@@ -1,0 +1,43 @@
+LAPORAN PENGUJIAN & PROGRAM BENCHMARK IHSAN-LIB
+=============================================================
+Tanggal: 15 Januari 2026
+Lingkungan: Lokal (Laragon/Windows)
+Framework: Laravel 10.x
+
+BAGIAN 1: PENGUJIAN FUNGSIONAL (FITUR)
+-------------------------------------------------------------
+Status: LULUS (PASSED)
+Total Pengujian: 30+ Poin
+
+1. Otentikasi Portal (PortalAuthTest)
+   [LULUS] Halaman Portal dapat dimuat
+   [LULUS] Login Anggota (Form Standard) - User: Test Santri (998877)
+   [LULUS] Login Anggota (RFID) - User: RFID112233
+   [LULUS] Penanganan Login Gagal (Cek Pesan Error Sesi)
+   [LULUS] Fungsi Logout (Sesi Dihapus)
+
+2. Transaksi Portal (PortalTransactionTest)
+   [LULUS] Absensi (Scan RFID)
+   [LULUS] Pencegahan Absen Ganda (Cek Double Scan Hari Sama)
+   [LULUS] Peminjaman Buku Mandiri (Stok Berkurang)
+   [LULUS] Pengembalian Buku Mandiri (Status Berubah 'Kembali')
+   [LULUS] Pengajuan Surat Bebas Pustaka (SBP)
+   [LULUS] Logika Penolakan SBP (Ditolak jika masih ada pinjaman)
+
+BAGIAN 2: BENCHMARK PERFORMA (INTERNAL)
+-------------------------------------------------------------
+Metode: php artisan benchmark:run
+Perangkat: Komputer Lokal
+
+Modul Uji                 | Iterasi    | Waktu        | Memori
+-------------------------------------------------------------
+Baca Data Buku            | 100x       | 99.45 ms     | 1.8584 MB
+Input Absensi             | 50x        | 215.9 ms     | 0.0591 MB
+Kalkulasi Denda           | 50x        | 0.01 ms      | 0 MB
+Cek Stok Sirkulasi        | 200x       | 155.55 ms    | 0 MB
+
+-------------------------------------------------------------
+KESIMPULAN
+- Logika fungsional Portal (Tamu/Santri) valid dan berjalan baik.
+- Masalah gagal login (harus refresh) telah diperbaiki dengan metode Standard POST.
+- Performa sistem sangat baik (rata-rata proses di bawah 0.25 detik).

@@ -1,0 +1,125 @@
+PANDUAN PEMBUATAN WIREFRAME & DESAIN FIGMA (IHSAN-LIB)
+======================================================
+
+Dokumen ini berisi daftar lengkap halaman dan komponen Desktop yang perlu Anda desain di Figma untuk mendokumentasikan website Ihsan-Lib saat ini.
+
+BAGIAN 1: CARA SCREENSHOT FULL PAGE (CHROME/EDGE)
+-------------------------------------------------
+Agar Anda mudah menjiplak (trace) ke Figma, gunakan fitur bawaan browser:
+
+1. Buka halaman website yang ingin di-capture (misal: localhost:8000).
+2. Tekan `F12` atau klik kanan > **Inspect** untuk membuka DevTools.
+3. Tekan `Ctrl + Shift + P` (Command + Shift + P di Mac) untuk membuka Command Palette.
+4. Ketik: `Capture full size screenshot` lalu tekan Enter.
+5. Browser akan mengunduh gambar panjang (.png) dari seluruh halaman (dari header sampai footer).
+
+BAGIAN 2: DAFTAR HALAMAN YANG HARUS DIBUAT (CHECKLIST)
+------------------------------------------------------
+
+Kelompokkan desain Anda di Figma berdasarkan "User Flow" berikut (Fokus Desktop):
+
+### A. PUBLIC & LANDING PAGE
+Target: Pengunjung Umum & Calon Santri (Layar Desktop 1440px)
+[ ] **Desktop View**
+    - Navbar (Logo, Link Navigasi, Tombol Login Staff)
+    - Hero Section (Judul Besar + Ilustrasi)
+    - Fitur Layanan & Koleksi Terbaru
+    - Footer
+[ ] **Modal Login**
+    - State Default: Form Input NIS.
+    - State RFID: Tampilan instruksi "Tap Kartu".
+
+### B. MEMBER PORTAL (AREA SANTRI)
+Target: Santri yang sudah login
+[ ] **Dashboard Utama**
+    - Header (Sapaan User + Banner Data Diri: NIS, Kelas)
+    - Kartu Statistik (Buku Dipinjam, Total Kunjungan) - Grid Layout
+    - Tombol Menu Cepat (Sirkulasi, Pengajuan SBP)
+[ ] **Katalog Internal**
+    - Search Bar Besar
+    - State Hasil Pencarian (List Buku Card)
+    - State "Tidak Ditemukan"
+[ ] **Modals (Pop-up)**
+    - **Modal Absen**: Tampilan Fingerprint/Scan.
+    - **Modal Pinjam**: Input Kode Buku -> Konfirmasi Peminjaman (Detail Buku).
+    - **Modal Pengajuan SBP**: Form input data diri.
+
+### C. ADMIN & STAFF DASHBOARD
+Target: Petugas Perpustakaan & Super Admin
+[ ] **Layout Dasar (Admin Skeleton)**
+    - **Sidebar Desktop**: Menu di kiri (lebar penuh/tetap).
+    - **Top Bar**: Tombol Toggle Sidebar + Profil User.
+[ ] **Halaman Dashboard (Index)**
+    - Grid Statistik (4 Kolom: Anggota, Buku, Peminjaman, Kiosk).
+    - Grafik Kunjungan (Chart).
+[ ] **Halaman Manajemen (CRUD)**
+    - **Filter Bar (PENTING Untuk Desain)**:
+      - **Anggota**: Input Cari (Nama/NIS), Dropdown Angkatan/Kelas, Dropdown Bulan Daftar, Dropdown Tahun Daftar.
+      - **Buku**: Input Cari (Judul/Penulis), Dropdown Kategori, Dropdown Tahun Terbit.
+      - **SBP**: Input Cari (Nama/NIS), Dropdown Status (Pending/Approved/Ditolak), Dropdown Bulan/Tahun.
+      - Tombol "Terapkan Filter" dan "Reset".
+    - Tabel Data Anggota / Buku / SBP (Action Buttons: Edit, Hapus, Detail).
+    - **Pagination**: Navigasi halaman di bawah tabel (Prev, 1, 2, 3... Next).
+    - Form Tambah/Edit Data (Input fields, Dropdown).
+
+[ ] **Halaman Member Portal**
+    - **Katalog Internal**: Search Bar Besar + Dropdown Kategori di sebelahnya.
+    - Modal Absen & Modal Status (Alert untuk SBP).
+    - Dashboard Card (Peminjaman, Statistik).
+
+
+
+BAGIAN 3: KOMPONEN UI KIT (ASSETS)
+----------------------------------
+Buat komponen terpisah di Figma agar desain konsisten (Design System sederhana):
+
+1. **Colors (Warna Kunci)**:
+   - Primary: Green-600 (#16a34a) - Warna utama IhsanLib.
+   - Background: Green-50 (#f0fdf4).
+   - Sidebar: Green-900 (#14532d).
+   - Accents: Blue (Info), Red (Error/Logout), Yellow (Warning).
+
+2. **Typography**:
+   - Font: Inter (Google Fonts).
+   - Headings: Bold / ExtraBold.
+   - Body: Regular / Medium.
+
+3. **Elements**:
+   - **Tombol**: Primary (Hijau), Secondary (Putih/Outline), Danger (Merah).
+   - **Input Fields**: Style border radius, focus state (ring hijau).
+   - **Cards**: Putih, Shadow-sm, Rounded-xl.
+   - **Icons**: Gunakan set icon konsisten (misal: Heroicons yang dipakai di web).
+
+Saran Langkah Pengerjaan:
+1. "Capture" semua halaman web yang sudah jadi menggunakan teknik di Bagian 1.
+2. Import hasil screenshot ke Figma sebagai referensi (layer paling bawah, lock opacity 50%).
+
+***
+
+## TIPS: GENERATE WIREFRAME OTOMATIS DENGAN AI/PLUGIN
+
+Jika Anda ingin mempercepat proses memindahkan desain website (Localhost) ke Figma, Anda bisa menggunakan bantuan AI atau Plugin berikut:
+
+### 1. html.to.design (REKOMENDASI UTAMA)
+Plugin ini paling **akurat** karena bisa mengubah website yang sedang berjalan (Localhost) langsung menjadi Layer Figma yang bisa diedit.
+- **Cara Kerja**:
+  1.  Install plugin **html.to.design** di Figma.
+  2.  Install juga **Chrome Extension html.to.design** di browser Anda.
+  3.  Buka website projek Anda di browser (misal: `http://127.0.0.1:8000`).
+  4.  Buka Extension Chrome, klik "Capture Page".
+  5.  Drag & drop file hasil capture ke Figma.
+- **Kelebihan**: Hasilnya pixel-perfect, teks bisa diedit, warna & font otomatis terdeteksi. Tidak perlu menggambar ulang dari nol.
+
+### 2. Uizard (Autodesigner)
+Jika Anda hanya punya **Screenshot** (gambar PNG/JPG) dan ingin mengubahnya menjadi desain yang bisa diedit.
+- **Cara Kerja**: Upload screenshot ke Uizard, lalu fitur AI-nya akan mendeteksi elemen tombol, teks, dan input form untuk diubah menjadi widget UI.
+- **Catatan**: Hasilnya mungkin tidak 100% sama dengan screenshot asli, tapi cukup bagus untuk wireframe kasar (Low-Fidelity).
+
+### 3. Wireframe Designer (Plugin Figma)
+Jika Anda ingin membuat halaman baru hanya dengan **Teks/Prompt**.
+- **Cara Kerja**: Ketik deskripsi seperti "Halaman dashboard admin dengan tabel anggota dan grafik statistik", lalu AI akan membuatkan layout wireframe standar.
+- **Cocok untuk**: Ide awal halaman yang belum ada kodenya.
+
+**Saran Workflow:**
+Karena aplikasi sudah berjalan (`php artisan serve`), gunakan **html.to.design** untuk mengambil struktur utama, lalu rapikan di Figma untuk dijadikan Wireframe (ubah warna jadi abu-abu/hitam putih jika perlu).
+***
