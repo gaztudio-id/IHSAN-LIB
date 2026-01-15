@@ -29,7 +29,7 @@
 
 - **Framework PHP**: [Laravel 10.x](https://laravel.com)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com)
-- **Interactivity**: Alpine.js / Vanilla JS (untuk wireframe), Livewire (untuk full app).
+- **Interactivity**: Alpine.js / Vanilla JS, Livewire (untuk full app).
 - **Database**: MySQL
 
 ## 🚀 Instalasi & Menjalankan Project
